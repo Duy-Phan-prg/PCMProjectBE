@@ -1,4 +1,4 @@
 package com.example.project.service;
 
-public interface CategoryService {
+public interface CategoryService  {
 }

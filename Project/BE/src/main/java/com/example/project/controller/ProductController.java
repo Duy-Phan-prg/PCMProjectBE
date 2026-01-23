@@ -1,4 +1,4 @@
 package com.example.project.controller;
 
-public class cc {
+public class ProductController {
 }

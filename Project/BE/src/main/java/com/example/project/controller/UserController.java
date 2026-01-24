@@ -2,8 +2,7 @@ package com.example.project.controller;
 
 import com.example.project.dto.request.LoginRequestDTO;
 import com.example.project.dto.response.LoginResponseDTO;
-import com.example.project.service.UserService;
-import com.example.project.service.impl.UserServiceImpl;
+import com.example.project.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

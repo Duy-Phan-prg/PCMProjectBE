@@ -1,4 +1,4 @@
-package com.example.project.service;
+package com.example.project.services;
 
 import com.example.project.dto.request.LoginRequestDTO;
 import com.example.project.dto.response.LoginResponseDTO;

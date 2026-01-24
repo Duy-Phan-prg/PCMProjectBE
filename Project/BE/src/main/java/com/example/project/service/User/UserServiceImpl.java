@@ -1,4 +1,4 @@
-package com.example.project.service.impl;
+package com.example.project.service.User;
 
 
 import com.example.project.dto.request.LoginRequestDTO;
@@ -6,7 +6,6 @@ import com.example.project.dto.response.LoginResponseDTO;
 import com.example.project.entity.User;
 import com.example.project.repository.UserRepository;
 import com.example.project.security.JwtTokenProvider;
-import com.example.project.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

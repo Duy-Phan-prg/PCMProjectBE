@@ -1,0 +1,47 @@
+package com.example.project.service.Category;
+
+import com.example.project.dto.request.CategoryRequest;
+import com.example.project.dto.response.CategoryResponse;
+import com.example.project.entity.Category;
+import com.example.project.repository.CategoryRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+@Transactional
+public class CategoryServiceImpl implements CategoryService {
+    private final CategoryRepository categoryRepository;
+
+    @Override
+    public CategoryResponse create(CategoryRequest request) {
+        Category category = new Category();
+        category.setName(request.getCategoryName());
+        Category save = categoryRepository.save(category);
+        return new CategoryResponse(save.getName(), save.getId());
+    }
+
+    @Override
+    public List<CategoryResponse> getAll() {
+        return categoryRepository.findAll()
+                .stream()
+                .map(c -> new CategoryResponse(c.getName(), c.getId()))
+                .toList();
+    }
+
+    @Override
+    public CategoryResponse update(Long id, CategoryRequest request) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+        category.setName(request.getCategoryName());
+        return new CategoryResponse(category.getName(), category.getId());
+    }
+
+    @Override
+    public void delete(Long id) {
+        categoryRepository.deleteById(id);
+    }
+}

@@ -1,10 +1,10 @@
 package com.example.project.service;
 
 
-import com.example.project.dto.request.LoginRequestDTO;
-import com.example.project.dto.request.RegisterRequestDTO;
-import com.example.project.dto.response.LoginResponseDTO;
-import com.example.project.dto.response.RegisterResponseDTO;
+import com.example.project.dto.request.LoginRequest;
+import com.example.project.dto.request.RegisterRequest;
+import com.example.project.dto.response.LoginResponse;
+import com.example.project.dto.response.RegisterResponse;
 import com.example.project.entity.User;
 import com.example.project.mapper.UserMapper;
 import com.example.project.repository.UserRepository;
@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
 
-    public LoginResponseDTO login(LoginRequestDTO request) {
+    public LoginResponse login(LoginRequest request) {
 
         User user = userRepository.findByEmailAndIsActiveTrue(request.getEmail())
                 .orElseThrow(() ->
@@ -41,13 +41,13 @@ public class UserServiceImpl implements UserService {
 
         String token = jwtTokenProvider.generateToken(user.getEmail());
 
-        return LoginResponseDTO.builder()
+        return LoginResponse.builder()
                 .token(token)
                 .build();
     }
 
     @Override
-    public RegisterResponseDTO register(RegisterRequestDTO request) {
+    public RegisterResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
 //            throw new RuntimeException("Email already exists");
         }

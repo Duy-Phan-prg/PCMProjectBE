@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CategoryRequestDTO {
+public class CategoryRequest {
     @NotBlank(message = "Category name is required")
     private String categoryName;
 }

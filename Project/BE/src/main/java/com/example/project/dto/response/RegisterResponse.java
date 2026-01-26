@@ -5,7 +5,7 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegisterResponseDTO {
+public class RegisterResponse {
     private Long id;
 
     private String fullName;

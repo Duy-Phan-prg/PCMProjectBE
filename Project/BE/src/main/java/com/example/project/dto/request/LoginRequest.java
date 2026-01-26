@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class LoginRequestDTO {
+public class LoginRequest {
     @NotBlank
     @Email
     private String email;

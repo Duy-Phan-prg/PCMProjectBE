@@ -21,7 +21,7 @@ public class DataInitializer implements CommandLineRunner {
             testUser.setEmail("test@gmail.com");
             testUser.setPassword(passwordEncoder.encode("1234"));
             testUser.setRole(Role.ADMIN);
-            testUser.setActive(true);
+            testUser.setIsActive(true);
             userRepository.save(testUser);
             System.out.println("✅ Created test user: test@gmail.com / 1234");
         }

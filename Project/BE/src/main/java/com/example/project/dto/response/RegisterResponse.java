@@ -18,7 +18,8 @@ public class RegisterResponse {
 
     private String role;
 
-    private Boolean active;
+    private Boolean isActive;
+
 
 
 }

@@ -10,10 +10,11 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class OpenApiConfig {
+
     @Bean
     public OpenAPI openAPI() {
 
-        String securitySchemeName = "BearerAuth";
+        String securitySchemeName = "bearerAuth";
 
         return new OpenAPI()
                 .info(new Info()
@@ -26,11 +27,13 @@ public class OpenApiConfig {
                                 .addSecuritySchemes(
                                         securitySchemeName,
                                         new SecurityScheme()
-                                                .name("Authorization")
                                                 .type(SecurityScheme.Type.HTTP)
                                                 .scheme("bearer")
                                                 .bearerFormat("JWT")
                                 )
+                )
+                .addSecurityItem(
+                        new SecurityRequirement().addList(securitySchemeName)
                 );
     }
 }

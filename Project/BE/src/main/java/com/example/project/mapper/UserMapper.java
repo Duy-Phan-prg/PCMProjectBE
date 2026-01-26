@@ -16,5 +16,6 @@ public interface UserMapper {
     User toEntity(RegisterRequest request);
 
     @Mapping(target = "role", expression = "java(user.getRole().name())")
+    @Mapping(target = "isActive", source = "isActive")
     RegisterResponse toRegisterResponse(User user);
 }

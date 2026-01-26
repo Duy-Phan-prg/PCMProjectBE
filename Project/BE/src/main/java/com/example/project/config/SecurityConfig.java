@@ -39,6 +39,7 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
+                                "/api/user/register",
                                 "/api/user/login",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**"
@@ -47,7 +48,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/admin/products/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilte.ccolass);
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

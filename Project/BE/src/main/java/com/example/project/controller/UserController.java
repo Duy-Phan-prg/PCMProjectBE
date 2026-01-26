@@ -1,7 +1,9 @@
 package com.example.project.controller;
 
 import com.example.project.dto.request.LoginRequest;
+import com.example.project.dto.request.RegisterRequest;
 import com.example.project.dto.response.LoginResponse;
+import com.example.project.dto.response.RegisterResponse;
 import com.example.project.service.implement.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,13 @@ public class UserController {
             @RequestBody LoginRequest request
     ) {
         return ResponseEntity.ok(userService.login(request));
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<RegisterResponse> register(
+            @RequestBody RegisterRequest request
+    ) {
+        return ResponseEntity.ok(userService.register(request));
     }
 
 }

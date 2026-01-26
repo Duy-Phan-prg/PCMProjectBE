@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
 
     public LoginResponse login(LoginRequest request) {
 
-        User user = userRepository.findByEmailAndActiveTrue(request.getEmail())
+        User user = userRepository.findByEmailAndIsActiveTrue(request.getEmail())
                 .orElseThrow(() ->
                         new UsernameNotFoundException("User not found"));
 

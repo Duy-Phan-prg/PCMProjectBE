@@ -1,9 +1,13 @@
 package com.example.project.service;
 
 
-import com.example.project.dto.request.LoginRequestDTO;
-import com.example.project.dto.response.LoginResponseDTO;
+import com.example.project.dto.request.LoginRequest;
+import com.example.project.dto.request.RegisterRequest;
+import com.example.project.dto.response.LoginResponse;
+import com.example.project.dto.response.RegisterResponse;
+import com.example.project.entity.Role;
 import com.example.project.entity.User;
+import com.example.project.mapper.UserMapper;
 import com.example.project.repository.UserRepository;
 import com.example.project.security.JwtTokenProvider;
 import com.example.project.service.implement.UserService;
@@ -21,10 +25,11 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
 
-    public LoginResponseDTO login(LoginRequestDTO request) {
+    public LoginResponse login(LoginRequest request) {
 
-        User user = userRepository.findByEmail(request.getEmail())
+        User user = userRepository.findByEmailAndIsActiveTrue(request.getEmail())
                 .orElseThrow(() ->
                         new UsernameNotFoundException("User not found"));
 
@@ -36,9 +41,22 @@ public class UserServiceImpl implements UserService {
         }
 
         String token = jwtTokenProvider.generateToken(user.getEmail());
+        user.setRole(Role.ADMIN);
 
-        return LoginResponseDTO.builder()
-                .token(token)
-                .build();
+        return userMapper.toLoginResponse(user, token);
     }
+
+    @Override
+    public RegisterResponse register(RegisterRequest request) {
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new RuntimeException("Email already exists");
+        }
+
+        User user = userMapper.toEntity(request);
+
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setIsActive(true);
+        return userMapper.toRegisterResponse(userRepository.save(user));
+    }
+
 }

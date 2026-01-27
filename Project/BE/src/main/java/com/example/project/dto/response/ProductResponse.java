@@ -1,6 +1,5 @@
 package com.example.project.dto.response;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -11,11 +11,10 @@ import org.mapstruct.Mapping;
 public interface UserMapper {
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "role", constant = "CUSTOMER")
     @Mapping(target = "isActive", constant = "true")
-    @Mapping(target = "role", expression = "java(Role.CUSTOMER)")
     User toEntity(RegisterRequest request);
 
-    @Mapping(target = "role", expression = "java(user.getRole().name())")
-    @Mapping(target = "isActive", source = "isActive")
+    @Mapping(target = "role", source = "role")
     RegisterResponse toRegisterResponse(User user);
 }

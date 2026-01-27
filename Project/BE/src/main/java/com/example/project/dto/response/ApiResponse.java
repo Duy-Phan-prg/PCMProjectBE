@@ -16,12 +16,12 @@ public class ApiResponse<T> {
     }
 
 
-    public static ApiResponse<Void> error(String message, String code) {
+    public static ApiResponse<Void> error(Object details, String code) {
         ApiResponse<Void> res = new ApiResponse<>();
         res.status = "ERROR";
         res.error = Map.of(
-                "message", message,
-                "code", code
+                "code", code,
+                "details", details
         );
         return res;
     }

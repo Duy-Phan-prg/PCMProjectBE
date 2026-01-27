@@ -7,6 +7,7 @@ import com.example.project.dto.response.LoginResponse;
 import com.example.project.dto.response.RegisterResponse;
 import com.example.project.entity.Role;
 import com.example.project.entity.User;
+import com.example.project.exception.category.UnauthorizedException;
 import com.example.project.mapper.UserMapper;
 import com.example.project.repository.UserRepository;
 import com.example.project.security.JwtTokenProvider;
@@ -31,19 +32,21 @@ public class UserServiceImpl implements UserService {
 
         User user = userRepository.findByEmailAndIsActiveTrue(request.getEmail())
                 .orElseThrow(() ->
-                        new UsernameNotFoundException("User not found"));
+                        new UnauthorizedException("Invalid email or password")
+                );
 
         if (!passwordEncoder.matches(
                 request.getPassword(),
                 user.getPassword()
         )) {
-            throw new BadCredentialsException("Invalid password");
+            throw new UnauthorizedException("Invalid email or password");
         }
 
         String token = jwtTokenProvider.generateToken(user.getEmail());
 
         return userMapper.toLoginResponse(user, token);
     }
+
 
     @Override
     public RegisterResponse register(RegisterRequest request) {

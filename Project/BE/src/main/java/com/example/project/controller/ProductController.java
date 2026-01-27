@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -29,16 +30,17 @@ public class ProductController {
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     @SecurityRequirement(name = "bearerAuth")
-    public ResponseEntity<ApiResponse<ProductResponse>> createProduct(@Valid @RequestBody ProductRequest request) {
-        ProductResponse product = productService.createProduct(request);
+    public ResponseEntity<ApiResponse<ProductResponse>> createProduct(@Valid @RequestPart("product") ProductRequest request,
+                                                                      @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) {
+        ProductResponse product = productService.createProduct(request,imageFile);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.success(product));
     }
 
     @Operation(summary = "Get all products (Admin)", description = "Admin can view all products in the admin board")
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    @SecurityRequirement(name = "bearerAuth")
+//    @PreAuthorize("hasRole('ADMIN')")
+//    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<ApiResponse<List<ProductResponse>>> getAllProductsAdmin() {
         List<ProductResponse> products = productService.getAllProduct();
         return ResponseEntity.ok(ApiResponse.success(products));

@@ -33,7 +33,12 @@ public class Product {
     @Min(0)
     private Integer stockQuantity;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
+
+
 }

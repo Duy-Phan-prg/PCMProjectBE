@@ -8,10 +8,12 @@ import com.example.project.entity.Category;
 import com.example.project.entity.Product;
 import com.example.project.repository.CategoryRepository;
 import com.example.project.repository.ProductRepository;
+import com.example.project.service.FileStorageService;
 import com.example.project.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -21,9 +23,11 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
+    private final FileStorageService fileStorageService;
 
     @Override
-    public ProductResponse createProduct (ProductRequest request){
+    public ProductResponse createProduct (ProductRequest request, MultipartFile imageFile) {
+        String imageUrl = fileStorageService.saveImage(imageFile);
         Category category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() ->  new RuntimeException("Category not found"));
 
@@ -33,6 +37,7 @@ public class ProductServiceImpl implements ProductService {
         product.setPrice(request.getPrice());
         product.setStockQuantity(request.getStockQuantity());
         product.setCategory(category);
+        product.setImageUrl(imageUrl);
 
         Product save = productRepository.save(product);
         return new ProductResponse(
@@ -41,6 +46,7 @@ public class ProductServiceImpl implements ProductService {
                 save.getDescription(),
                 save.getPrice(),
                 save.getStockQuantity(),
+                save.getImageUrl(),
                 new CategoryResponse(category.getName(), category.getId())
         );
     }
@@ -55,6 +61,7 @@ public class ProductServiceImpl implements ProductService {
                         p.getDescription(),
                         p.getPrice(),
                         p.getStockQuantity(),
+                        p.getImageUrl(),
                         new CategoryResponse(p.getCategory().getName(), p.getCategory().getId())
                 ))
                 .toList();
@@ -80,6 +87,7 @@ public class ProductServiceImpl implements ProductService {
                 product.getDescription(),
                 product.getPrice(),
                 product.getStockQuantity(),
+                product.getImageUrl(),
                 new CategoryResponse(category.getName(), category.getId())
         );
     }

@@ -43,8 +43,7 @@ public class SecurityConfig {
                                 "/api/user/login",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
-                                "/api/products/getAll",
-                                "/api/categories/getAll",
+                                "/api/products",
                                 "/api/categories"
                         ).permitAll()
 

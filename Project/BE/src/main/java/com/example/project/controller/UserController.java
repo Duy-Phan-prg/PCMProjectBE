@@ -2,9 +2,11 @@ package com.example.project.controller;
 
 import com.example.project.dto.request.LoginRequest;
 import com.example.project.dto.request.RegisterRequest;
+import com.example.project.dto.response.ApiResponse;
 import com.example.project.dto.response.LoginResponse;
 import com.example.project.dto.response.RegisterResponse;
 import com.example.project.service.implement.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,10 +28,16 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<RegisterResponse> register(
-            @RequestBody RegisterRequest request
+    public RegisterResponse register(
+            @Valid @RequestBody RegisterRequest request
     ) {
-        return ResponseEntity.ok(userService.register(request));
+        return userService.register(request);
     }
+
+    @PostMapping("/logout")
+    public ApiResponse<Void> logout() {
+        return ApiResponse.success(null);
+    }
+
 
 }

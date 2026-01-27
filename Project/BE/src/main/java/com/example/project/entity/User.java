@@ -1,6 +1,7 @@
 package com.example.project.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Entity
@@ -16,25 +17,30 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @NotBlank(message = "Full name is required")
+    @Column(name = "full_name", columnDefinition = "NVARCHAR(100)")
     private String fullName;
 
-    @Column
+    @NotBlank(message = "Phone number is required")
+    @Column(columnDefinition = "NVARCHAR(20)")
     private String phone;
 
+
+    @NotBlank(message = "Address is required")
+    @Column(columnDefinition = "NVARCHAR(255)")
     private String address;
 
-    @Column(nullable = false, unique = true)
+    @NotBlank(message = "Email is required")
+    @Column(unique = true, nullable = false)
     private String email;
 
+    @NotBlank(message = "Password is required")
     @Column(nullable = false)
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private Role role;
 
-    @Column(name = "is_active", columnDefinition = "BIT DEFAULT 1")
-    private Boolean isActive = true;
+    private Boolean isActive;
 
 }

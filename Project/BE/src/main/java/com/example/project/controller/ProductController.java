@@ -26,7 +26,7 @@ public class ProductController {
 
     @Operation(summary = "Create a new product",
                description = "Admin can add a new product with name (required), description, price (required, positive), stock quantity (required, non-negative), and category")
-    @PostMapping("/create")
+    @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<ApiResponse<ProductResponse>> createProduct(@Valid @RequestBody ProductRequest request) {
@@ -36,7 +36,7 @@ public class ProductController {
     }
 
     @Operation(summary = "Get all products (Admin)", description = "Admin can view all products in the admin board")
-    @GetMapping("/getAll")
+    @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<ApiResponse<List<ProductResponse>>> getAllProductsAdmin() {
@@ -45,7 +45,7 @@ public class ProductController {
     }
 
     @Operation(summary = "Get product by ID (Admin)", description = "Admin can view details of a specific product")
-    @GetMapping("/getId/{productId}")
+    @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<ApiResponse<ProductResponse>> getProductByIdAdmin(@PathVariable Long productId) {
@@ -57,7 +57,7 @@ public class ProductController {
     }
 
     @Operation(summary = "Update a product", description = "Admin can edit product details (name, description, price, stock quantity, category)")
-    @PutMapping("/update/{productId}")
+    @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<ApiResponse<ProductResponse>> updateProduct(
@@ -68,7 +68,7 @@ public class ProductController {
     }
 
     @Operation(summary = "Delete a product", description = "Admin can remove a product from the catalog")
-    @DeleteMapping("/delete/{productId}")
+    @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<ApiResponse<Void>> deleteProduct(@PathVariable Long productId) {

@@ -25,7 +25,7 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @Operation(summary = "Create a new category", description = "Admin can create a new product category (e.g., Electronics, Books, Clothing)")
-    @PostMapping("/create")
+    @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<ApiResponse<CategoryResponse>> createCategory(@Valid @RequestBody CategoryRequest request) {
@@ -35,7 +35,7 @@ public class CategoryController {
     }
 
     @Operation(summary = "Get all categories", description = "Admin can view all product categories")
-    @GetMapping("/getAll")
+    @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<ApiResponse<List<CategoryResponse>>> getAllCategories() {
@@ -44,7 +44,7 @@ public class CategoryController {
     }
 
     @Operation(summary = "Update a category", description = "Admin can update an existing category")
-    @PutMapping("/update/{categoryId}")
+    @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<ApiResponse<CategoryResponse>> updateCategory(
@@ -55,7 +55,7 @@ public class CategoryController {
     }
 
     @Operation(summary = "Delete a category", description = "Admin can delete a category")
-    @DeleteMapping("/delete/{categoryId}")
+    @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<ApiResponse<Void>> deleteCategory(@PathVariable Long categoryId) {

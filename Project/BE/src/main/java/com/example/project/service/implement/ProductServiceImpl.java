@@ -88,4 +88,36 @@ public class ProductServiceImpl implements ProductService {
     public void delete(Long id) {
         productRepository.deleteById(id);
     }
+    @Override
+    public List<ProductResponse> search(String keyword) {
+
+        List<Product> products =
+                productRepository
+                        .findByNameContainingIgnoreCaseOrCategory_NameContainingIgnoreCase(
+                                keyword,
+                                keyword
+                        );
+
+        return products.stream()
+                .map(this::map)
+                .toList();
+    }
+
+    private ProductResponse map(Product p) {
+
+        CategoryResponse category = new CategoryResponse(
+                p.getCategory().getName(),
+                p.getCategory().getId()
+        );
+
+
+        return new ProductResponse(
+                p.getId(),
+                p.getName(),
+                p.getDescription(),
+                p.getPrice(),
+                p.getStockQuantity(),
+                category
+        );
+    }
 }

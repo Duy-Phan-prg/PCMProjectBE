@@ -8,7 +8,6 @@ import com.example.project.dto.response.RegisterResponse;
 import com.example.project.entity.Role;
 import com.example.project.entity.User;
 import com.example.project.mapper.UserMapper;
-import com.example.project.repository.ProductRepository;
 import com.example.project.repository.UserRepository;
 import com.example.project.security.JwtTokenProvider;
 import com.example.project.service.implement.UserService;
@@ -23,12 +22,10 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional
 public class UserServiceImpl implements UserService {
-
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
-    private final ProductRepository productRepository;
 
     public LoginResponse login(LoginRequest request) {
 
@@ -46,9 +43,7 @@ public class UserServiceImpl implements UserService {
         String token = jwtTokenProvider.generateToken(user.getEmail());
         user.setRole(Role.ADMIN);
 
-        return LoginResponse.builder()
-                .token(token)
-                .build();
+        return userMapper.toLoginResponse(user, token);
     }
 
     @Override
@@ -62,6 +57,23 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setIsActive(true);
         return userMapper.toRegisterResponse(userRepository.save(user));
+    }
+
+    @Override
+    public User getProfile(String token) {
+
+        if (token == null || token.isBlank()) {
+            throw new RuntimeException("Token trống");
+        }
+
+        if (!jwtTokenProvider.validateToken(token)) {
+            throw new RuntimeException("Token không hợp lệ");
+        }
+
+        String email = jwtTokenProvider.extractEmail(token);
+
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User không tồn tại"));
     }
 
 

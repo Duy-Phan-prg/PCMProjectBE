@@ -41,8 +41,6 @@ public class UserServiceImpl implements UserService {
         }
 
         String token = jwtTokenProvider.generateToken(user.getEmail());
-        user.setRole(Role.ADMIN);
-
         return userMapper.toLoginResponse(user, token);
     }
 
@@ -53,28 +51,13 @@ public class UserServiceImpl implements UserService {
         }
 
         User user = userMapper.toEntity(request);
-
+        user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setFullName(request.getFullName());
+        user.setRole(Role.CUSTOMER);
+        user.setPhone(request.getPhone());
         user.setIsActive(true);
         return userMapper.toRegisterResponse(userRepository.save(user));
     }
-
-    @Override
-    public User getProfile(String token) {
-
-        if (token == null || token.isBlank()) {
-            throw new RuntimeException("Token trống");
-        }
-
-        if (!jwtTokenProvider.validateToken(token)) {
-            throw new RuntimeException("Token không hợp lệ");
-        }
-
-        String email = jwtTokenProvider.extractEmail(token);
-
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User không tồn tại"));
-    }
-
 
 }

@@ -2,6 +2,7 @@ package com.example.project.controller;
 
 import com.example.project.dto.request.LoginRequest;
 import com.example.project.dto.request.RegisterRequest;
+import com.example.project.dto.response.ApiResponse;
 import com.example.project.dto.response.LoginResponse;
 import com.example.project.dto.response.RegisterResponse;
 import com.example.project.service.implement.UserService;
@@ -32,5 +33,11 @@ public class UserController {
     ) {
         return userService.register(request);
     }
+
+    @PostMapping("/logout")
+    public ApiResponse<Void> logout() {
+        return ApiResponse.success(null);
+    }
+
 
 }

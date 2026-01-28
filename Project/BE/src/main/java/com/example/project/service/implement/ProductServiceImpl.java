@@ -76,6 +76,8 @@ public class ProductServiceImpl implements ProductService {
         Category category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found"));
 
+        String imageUrl = fileStorageService.updateImage(product.getImageUrl(),  imageFile);
+
         product.setName(request.getProductName());
         product.setDescription(request.getDescription());
         product.setPrice(request.getPrice());

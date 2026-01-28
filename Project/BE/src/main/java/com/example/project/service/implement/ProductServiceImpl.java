@@ -101,6 +101,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void deleteProduct(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product không tồn tại"));
+
+        fileStorageService.deleteImage(product.getImageUrl());
         productRepository.deleteById(id);
     }
 

@@ -16,11 +16,9 @@ public class FileStorageServiceImpl implements FileStorageService {
     @Override
     public String saveImage(MultipartFile file) {
 
-
         if (file == null || file.isEmpty()) {
             throw new RuntimeException("File is empty");
         }
-
 
         String contentType = file.getContentType();
         if (contentType == null || !contentType.startsWith("image/")) {
@@ -28,56 +26,60 @@ public class FileStorageServiceImpl implements FileStorageService {
         }
 
         try {
-
             Path uploadPath = Paths.get(UPLOAD_DIR);
             Files.createDirectories(uploadPath);
 
-
             String originalName = file.getOriginalFilename();
             String cleanName = originalName == null ? "image"
-                    : originalName
-                    .replaceAll("\\s+", "_")
+                    : originalName.replaceAll("\\s+", "_")
                     .replaceAll("[^a-zA-Z0-9._-]", "");
-
 
             String fileName = UUID.randomUUID() + "_" + cleanName;
             Path filePath = uploadPath.resolve(fileName);
 
-
-            Files.copy(
-                    file.getInputStream(),
-                    filePath,
-                    StandardCopyOption.REPLACE_EXISTING
-            );
-
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
             return "/uploads/products/" + fileName;
 
         } catch (IOException e) {
-            e.printStackTrace();
             throw new RuntimeException("Upload image failed", e);
         }
     }
 
     @Override
-    public String updateImage(String existingFilePath, MultipartFile newFile) {
+    public String updateImage(String existingImageUrl, MultipartFile newFile) {
+
         if (newFile == null || newFile.isEmpty()) {
-            return existingFilePath;
+            return existingImageUrl;
         }
 
         String contentType = newFile.getContentType();
-        if (contentType == null || !contentType.startsWith("/uploads/")) {
+        if (contentType == null || !contentType.startsWith("image/")) {
             throw new RuntimeException("File must be an image");
         }
+
+        // 🔥 XÓA ẢNH CŨ
+        deleteImage(existingImageUrl);
+
+        // 🔥 LƯU ẢNH MỚI
+        return saveImage(newFile);
+    }
+
+    @Override
+    public void deleteImage(String imageUrl) {
+
+        if (imageUrl == null || imageUrl.isBlank()) return;
+
         try {
-            if (existingFilePath != null && !existingFilePath.isEmpty()) {
-                Path oldPath = Paths.get(existingFilePath.replaceFirst("^/", ""));
-                Files.deleteIfExists(oldPath);
-            }
-            return saveImage(newFile);
+            // imageUrl = /uploads/products/abc.jpg
+            String fileName = Paths.get(imageUrl).getFileName().toString();
+            Path filePath = Paths.get(UPLOAD_DIR).resolve(fileName);
+
+            Files.deleteIfExists(filePath);
 
         } catch (IOException e) {
-            throw new RuntimeException("Update image failed", e);
+            throw new RuntimeException("Không thể xóa file ảnh", e);
         }
     }
 }
+

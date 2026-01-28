@@ -6,6 +6,7 @@ import com.example.project.dto.response.CategoryResponse;
 import com.example.project.dto.response.ProductResponse;
 import com.example.project.entity.Category;
 import com.example.project.entity.Product;
+import com.example.project.exception.product.DuplicateProductException;
 import com.example.project.repository.CategoryRepository;
 import com.example.project.repository.ProductRepository;
 import com.example.project.service.FileStorageService;
@@ -27,6 +28,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponse createProduct(ProductRequest request, MultipartFile imageFile) {
+        if (productRepository.existsByName(request.getProductName())) {
+            throw new DuplicateProductException("Product already exists");
+        }
         String imageUrl = fileStorageService.saveImage(imageFile);
         Category category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found"));

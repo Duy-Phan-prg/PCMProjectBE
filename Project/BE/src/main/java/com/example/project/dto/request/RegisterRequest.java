@@ -10,13 +10,13 @@ import lombok.*;
 
 public class RegisterRequest {
 
-    @Column(name = "full_name", columnDefinition = "NVARCHAR(100)")
+    @NotBlank(message = "Full name is required")
     private String fullName;
 
-    @Column(columnDefinition = "NVARCHAR(20)")
+    @NotBlank(message = "Phone number is required")
     private String phone;
 
-    @Column(columnDefinition = "NVARCHAR(255)")
+    @NotBlank(message = "Address is required")
     private String address;
 
     @Email(message = "Invalid email address")
@@ -24,7 +24,7 @@ public class RegisterRequest {
     private String email;
 
     @NotBlank(message = "Password is required")
-    @Size(min = 1, message = "Password must be at least 1 characters long")
+    @Size(min = 3, message = "Password must be at least 3 characters")
     private String password;
 
 }

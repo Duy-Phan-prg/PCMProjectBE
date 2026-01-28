@@ -1,7 +1,6 @@
 package com.example.project.config;
 
 import com.example.project.dto.response.ApiResponse;
-import com.example.project.exception.BadRequestException;
 import com.example.project.exception.category.CategoryAlreadyExistsException;
 import com.example.project.exception.category.CategoryInUseException;
 import com.example.project.exception.category.CategoryNotFoundException;
@@ -9,6 +8,8 @@ import com.example.project.exception.category.UnauthorizedException;
 import com.example.project.exception.product.DuplicateProductException;
 import com.example.project.exception.product.InvalidProductDataException;
 import com.example.project.exception.product.ProductNotFoundException;
+import com.example.project.exception.user.BadRequestException;
+import com.example.project.exception.user.DuplicateUserException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,6 +56,17 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.error(errors, "VALIDATION_ERROR")
                 );
     }
+
+    @ExceptionHandler(DuplicateUserException.class)
+    public ResponseEntity<ApiResponse<Void>> handleDuplicateUser(DuplicateUserException ex) {
+
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(ApiResponse.error(
+                        ex.getMessage(),
+                        "DUPLICATE_USER"
+                ));
+    }
+
 
 
     // Auth

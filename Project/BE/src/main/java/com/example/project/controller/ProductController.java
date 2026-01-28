@@ -3,6 +3,7 @@ package com.example.project.controller;
 import com.example.project.dto.request.ProductRequest;
 import com.example.project.dto.response.ApiResponse;
 import com.example.project.dto.response.ProductResponse;
+import com.example.project.entity.Product;
 import com.example.project.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -41,8 +42,20 @@ public class ProductController {
     @GetMapping
 //    @PreAuthorize("hasRole('ADMIN')")
 //    @SecurityRequirement(name = "bearerAuth")
-    public ResponseEntity<ApiResponse<List<ProductResponse>>> getAllProductsAdmin() {
-        List<ProductResponse> products = productService.getAllProduct();
+    public ResponseEntity<ApiResponse<List<ProductResponse>>> getProducts(
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) String categoryName
+    ) {
+        List<ProductResponse> products;
+
+        if (categoryId != null) {
+            products = productService.getProductByCategory_Id(categoryId);
+        } else if (categoryName != null) {
+            products = productService.getProductByCategory_Name(categoryName);
+        } else {
+            products = productService.getAllProduct();
+        }
+
         return ResponseEntity.ok(ApiResponse.success(products));
     }
 
@@ -83,4 +96,6 @@ public class ProductController {
         productService.deleteProduct(id);
         return ResponseEntity.ok(ApiResponse.success(null));
     }
+
+
 }

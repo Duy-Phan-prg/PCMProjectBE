@@ -138,4 +138,21 @@ public class ProductServiceImpl implements ProductService {
         );
     }
 
+
+    @Override
+    public List<ProductResponse> getProductByCategory_Id(Long id) {
+        return productRepository.findByCategory_Id(id)
+                .stream()
+                .map(this::map)
+                .toList();
+    }
+
+    @Override
+    public List<ProductResponse> getProductByCategory_Name(String name) {
+        return productRepository.findByCategory_Name(name)
+                .stream()
+                .map(this::map)
+                .toList();
+    }
+
 }

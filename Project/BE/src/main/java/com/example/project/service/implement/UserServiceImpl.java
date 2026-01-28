@@ -8,7 +8,6 @@ import com.example.project.dto.response.RegisterResponse;
 import com.example.project.entity.Role;
 import com.example.project.entity.User;
 import com.example.project.exception.category.UnauthorizedException;
-import com.example.project.exception.user.DuplicateUserException;
 import com.example.project.mapper.UserMapper;
 import com.example.project.repository.UserRepository;
 import com.example.project.security.JwtTokenProvider;
@@ -51,20 +50,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public RegisterResponse register(RegisterRequest request) {
-
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new DuplicateUserException("Email already exists");
+            throw new IllegalStateException("EMAIL_ALREADY_EXISTS");
         }
 
-        User user = userMapper.toEntity(request);
+        User user = new User();
+        user.setEmail(request.getEmail());
+        user.setFullName(request.getFullName());
+        user.setPhone(request.getPhone());
+        user.setAddress(request.getAddress());
 
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setIsActive(true);
         user.setRole(Role.CUSTOMER);
+        user.setIsActive(true);
 
         return userMapper.toRegisterResponse(userRepository.save(user));
     }
-
     @Override
     public User getProfile(String token) {
 

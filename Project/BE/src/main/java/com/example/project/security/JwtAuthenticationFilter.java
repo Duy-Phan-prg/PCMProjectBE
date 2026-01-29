@@ -66,10 +66,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 //            }
 //        }
             if (jwtTokenProvider.validateToken(token)) {
+
                 String email = jwtTokenProvider.extractEmail(token);
 
-                UserDetails userDetails =
-                        userDetailsService.loadUserByUsername(email);
+                CustomUserDetails userDetails =
+                        (CustomUserDetails) userDetailsService.loadUserByUsername(email);
 
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(

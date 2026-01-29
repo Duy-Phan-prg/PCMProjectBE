@@ -68,10 +68,15 @@ public class SecurityConfig {
                         //Authenticated
                                 .requestMatchers("/api/cart/**").authenticated()
 
-                                // ADMIN
+                                // ADMIN -Prodcut
                                 .requestMatchers(HttpMethod.POST, "/api/products/**").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.PUT, "/api/products/**").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.DELETE, "/api/products/**").hasRole("ADMIN")
+
+                                // ADMIN - Category
+                                .requestMatchers(HttpMethod.POST, "/api/categories/**").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/api/categories/**").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "/api/categories/**").hasRole("ADMIN")
 
                                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
 

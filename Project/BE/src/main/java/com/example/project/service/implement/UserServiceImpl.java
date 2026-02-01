@@ -13,8 +13,6 @@ import com.example.project.repository.UserRepository;
 import com.example.project.security.JwtTokenProvider;
 import com.example.project.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,6 +50,10 @@ public class UserServiceImpl implements UserService {
     public RegisterResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new IllegalStateException("EMAIL_ALREADY_EXISTS");
+        }
+
+        if (userRepository.existsByPhone(request.getPhone())) {
+            throw new IllegalStateException("PHONE_ALREADY_EXISTS");
         }
 
         User user = new User();

@@ -1,9 +1,6 @@
 package com.example.project.config;
 
-
-import com.example.project.security.CustomUserDetailsService;
 import com.example.project.security.JwtAuthenticationFilter;
-import com.example.project.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,10 +25,12 @@ import java.util.Arrays;
 @EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+
     private final JwtAuthenticationFilter jwtFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
@@ -39,25 +38,15 @@ public class SecurityConfig {
                         sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers(
-//                                "/api/user/register",
-//                                "/api/user/login",
-//                                "/swagger-ui/**",
-//                                "/v3/api-docs/**",
-//                                "/api/products",
-//                                "/api/products/{id}",
-//                                "/uploads/**",
-//                                "/api/categories"
-//                        ).permitAll()
-//
-//                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
-//
-//                        .anyRequest().authenticated()
-//                )
-                        //PUBLIC
-                                .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
-                                .requestMatchers(
+
+                        // ===== PUBLIC =====
+                        .requestMatchers("/").permitAll()
+                        .requestMatchers("/health").permitAll()
+
+                        .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
+
+                        .requestMatchers(
                                 "/api/user/register",
                                 "/api/user/login",
                                 "/swagger-ui/**",
@@ -65,22 +54,21 @@ public class SecurityConfig {
                                 "/uploads/**"
                         ).permitAll()
 
-                        //Authenticated
-                                .requestMatchers("/api/cart/**").authenticated()
+                        // ===== AUTHENTICATED =====
+                        .requestMatchers("/api/cart/**").authenticated()
 
-                                // ADMIN -Prodcut
-                                .requestMatchers(HttpMethod.POST, "/api/products/**").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.PUT, "/api/products/**").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.DELETE, "/api/products/**").hasRole("ADMIN")
+                        // ===== ADMIN =====
+                        .requestMatchers(HttpMethod.POST, "/api/products/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/products/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/products/**").hasRole("ADMIN")
 
-                                // ADMIN - Category
-                                .requestMatchers(HttpMethod.POST, "/api/categories/**").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.PUT, "/api/categories/**").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.DELETE, "/api/categories/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/categories/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/categories/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/categories/**").hasRole("ADMIN")
 
-                                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
 
-                                .anyRequest().authenticated()
+                        .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -91,11 +79,14 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("*"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(
+                Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")
+        );
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(false);
-        
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+
+        UrlBasedCorsConfigurationSource source =
+                new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
@@ -112,4 +103,3 @@ public class SecurityConfig {
         return config.getAuthenticationManager();
     }
 }
-

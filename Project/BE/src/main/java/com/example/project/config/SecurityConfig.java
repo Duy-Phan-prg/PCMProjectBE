@@ -19,7 +19,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Configuration
@@ -40,7 +39,10 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
 
-                        // ===== PUBLIC =====
+                        // ====== CORS PREFLIGHT ======
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                        // ====== PUBLIC ======
                         .requestMatchers("/").permitAll()
                         .requestMatchers("/health").permitAll()
 
@@ -55,10 +57,10 @@ public class SecurityConfig {
                                 "/uploads/**"
                         ).permitAll()
 
-                        // ===== AUTHENTICATED =====
+                        // ====== AUTHENTICATED ======
                         .requestMatchers("/api/cart/**").authenticated()
 
-                        // ===== ADMIN =====
+                        // ====== ADMIN ======
                         .requestMatchers(HttpMethod.POST, "/api/products/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/products/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/products/**").hasRole("ADMIN")
@@ -76,17 +78,19 @@ public class SecurityConfig {
         return http.build();
     }
 
+    // ===== CORS CONFIG =====
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(
-                List.of("https://pcm-project-fe.vercel.app")
-        );
+        configuration.setAllowedOrigins(List.of(
+                "http://localhost:5173",
+                "https://pcm-project-fe-ylcd.vercel.app"
+        ));
 
-        configuration.setAllowedMethods(
-                List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")
-        );
+        configuration.setAllowedMethods(List.of(
+                "GET", "POST", "PUT", "DELETE", "OPTIONS"
+        ));
 
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(false);
@@ -97,13 +101,13 @@ public class SecurityConfig {
         return source;
     }
 
-
-
+    // ===== PASSWORD =====
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    // ===== AUTH MANAGER =====
     @Bean
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration config

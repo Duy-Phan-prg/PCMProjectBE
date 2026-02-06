@@ -84,9 +84,10 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of(
+        configuration.setAllowedOriginPatterns(List.of(
                 "http://localhost:5173",
-                "https://pcm-project-fe-ylcd.vercel.app"
+                "http://localhost:3000",
+                "https://*.vercel.app"
         ));
 
         configuration.setAllowedMethods(List.of(
@@ -94,6 +95,8 @@ public class SecurityConfig {
         ));
 
         configuration.setAllowedHeaders(List.of("*"));
+
+        // 🚨 QUAN TRỌNG
         configuration.setAllowCredentials(false);
 
         UrlBasedCorsConfigurationSource source =
